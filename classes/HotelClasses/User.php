@@ -50,7 +50,7 @@
             $this->id = $id;
         }
 
-        function setTitle(string $title) {
+        function setTitle($title) {
             $this->title = $title;
         }
         

@@ -2,9 +2,9 @@
     session_start();
     require_once('./lib/autoloader.php');
     require('./lib/get-user-details.php');
-    require('./includes/header.html');
     if (isset($_SESSION['userType'])) $userType=$_SESSION['userType'];
     else $userType='guest';
+    require('./includes/header.html');
 ?>
 
 <div class="container">

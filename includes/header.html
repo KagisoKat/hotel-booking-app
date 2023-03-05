@@ -16,25 +16,23 @@
     <nav>
         <h3><a href="index.php">bestHotels</a></h3>
         <ul>
-            <!--- // { ?> -->
-                <?php //if (isset($user)) { 
-                    if (isset($_SESSION['userId'])) { 
-                        if (isset($_SESSION['userType']) & 
-                            ($_SESSION['userType'] === "admin")) { ?>
-                                <li><a href="admin.php">Admin</a></li>
-                                <li><a href="registerBook.php">Register Book</a></li>
-                                <li><a href="adminAuthors.php">Authors</a></li>
-                                <li><a href="registerAuthor.php">Register Author</a></li><?php 
-                        } 
-                        if (isset($_SESSION['userType']) & ($_SESSION['userType'] === "member")) { ?>
-                             <li><a href="user.php">Member</a></li><?php
-                        } ?>
-                        <li><a href="profile.php">Profile</a></li>
-                        <li><a href="logout.php">Logout</a></li><?php
-                    } else { ?> 
+                <?php 
+                    if (!isset($_SESSION['userType']) || $_SESSION['userType'] == 'guest') { ?>
                         <li><a href="login.php">Login</a></li>
                         <li><a href="cms.php">CMS</a></li><?php
+                    } elseif ($_SESSION['userType'] == 'user') { ?>
+                        <li>User</li><?php
+                    } elseif ($_SESSION['userType'] == "cms") { ?>
+                        <li><a href="cms-users.php">Users</a></li>
+                        <li><a href="cms-bookings.php">Bookings</a></li>
+                        <li><a href="cms-hotels.php">Hotels</a></li>
+                        <li><a href="cms-admin.php">CMS</a></li><?php
                     }
-                ?>
+
+                    if (isset($_SESSION['userType']) && ($_SESSION['userType'] == 'user' || $_SESSION['userType'] == 'cms')) { ?>
+                        <li><a href="profile.php">Profile</a></li>
+                        <li><a href="logout.php">Logout</a></li><?php
+                    }
+               ?>
         </ul>
     </nav>

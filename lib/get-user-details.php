@@ -17,6 +17,7 @@
             $user->setEmail($user_item->user_email);
             $user->setAddress($user_item->user_address);
             $user->setPasswordHashed($user_item->user_password);
+            //echo "Found user " . $user->getTitle() . " " . $user->getFirstName() . " " . $user->getLastName() . ".";
         } elseif ($_SESSION['userType']=="cms") {
             $userType="cms";
 
@@ -30,6 +31,9 @@
             $staff->setLastName($staff_item->staff_lastname);
             $staff->setEmail($staff_item->staff_email);
             $staff->setPasswordHashed($staff_item->staff_password);
+            //echo "Found CMS " . $user->getFirstName() . " " . $user->getLastName() . ".";
+         } else {
+            //echo "This is a guest user";
          }
     }
 ?>

@@ -1,7 +1,7 @@
 <?php
     namespace HotelClasses;
     class Staff {
-        private int $id;
+        private $id;
         private $firstName;
         private $lastName;
         private $email;

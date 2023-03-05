@@ -1,7 +1,7 @@
 <?php
     namespace HotelClasses;
     class User {
-        private int $id;
+        private $id;
         private $title;
         private $firstName;
         private $lastName;
@@ -50,7 +50,7 @@
             $this->id = $id;
         }
 
-        function setTitle($title) {
+        function setTitle(string $title) {
             $this->title = $title;
         }
         

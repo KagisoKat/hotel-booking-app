@@ -25,14 +25,19 @@
 ?>
 <?php require('./includes/header.html'); ?>
 <div class="container">
-
     <div class="content">
         <form method="post" name="searchForm" action="cms-admin.php">
             <input type="text" name="searchText" class="form-control mt-2" />
             <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
         </form>
     </div>
-    <div>
+<div>
+
+<div class="container">
+    <div class="content">
+        <a href="cms-registerhotel.php"><button name="register" type="button" class="btn btn-primary mt-3 mb-2">Register Hotel</button></a>
+    </div>
+<div>
 
         <table border="1" width="100%">
             <tr>

@@ -46,6 +46,11 @@
         <div class="card-header bg-light mb-3">Update Your Details</div>
         <div class="card-body">
             <form action="profile.php" method="POST">
+                <div class="form-group">
+                    <label for="userID"><?php if ($userType == "user") echo "User ID"; elseif ($userType == "cms") echo "CMS ID"; ?></label>
+                    <input required type="text" name="userID" class="form-control" value="<?php if ($userType == "user") echo $user->getID(); elseif ($userType == "cms") echo $staff->getID(); ?>" readonly/>
+                </div>
+                <br />
                 <?php if ($userType=="user") { ?>
                     <div class="form-group">
                         <select name="userTitle">

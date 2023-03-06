@@ -6,12 +6,12 @@
     require('./config/db.php');
     
     if (! $userType=='cms')
-    header("Location: index.php");
+        header("Location: index.php");
 
     if(isset( $_GET['user_id'])) {
-      $user_id = $_GET['user_id'];
-      $stmt = $pdo -> prepare('DELETE FROM users WHERE user_id = ?');
-      $stmt -> execute( [$user_id] );
-      header( "Location: cms-users.php" );
+        $user_id = $_GET['user_id'];
+        $stmt = $pdo -> prepare('DELETE FROM users WHERE user_id = ?');
+        $stmt -> execute( [$user_id] );
+        header( "Location: cms-users.php" );
     }
 ?>

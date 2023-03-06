@@ -8,7 +8,7 @@
     require('./lib/get-user-details.php');
     require('./config/db.php');
     
-    if (! $userType=='cms')
+    if ($userType!='cms')
     header("Location: index.php");
 
     if (isset($_POST['search'])) {

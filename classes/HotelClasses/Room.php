@@ -5,6 +5,7 @@
         private $label;
         private $price;
         private $hotelId;
+        private $hotelName;
         private $pictures = array();
 
         function getId() {
@@ -23,6 +24,10 @@
             return $this->hotelId;
         }
 
+        function getHotelName() {
+            return $this->hotelName;
+        }
+
         function setId($id) {
             $this->id = $id;
         }
@@ -39,8 +44,12 @@
             $this->hotelId = $hotelId;
         }
 
+        function setHotelName($hotelName) {
+            $this->hotelName = $hotelName;
+        }
+
         function addPicture($picture) {
-            array_push($this->proomPictures, $picture);
+            array_push($this->pictures, $picture);
         }
 
         function removePicture($picture) {

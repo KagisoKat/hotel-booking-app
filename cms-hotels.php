@@ -13,15 +13,15 @@
 
     if (isset($_POST['search'])) {
         $searchString = "%" . filter_var($_POST["searchText"], FILTER_SANITIZE_STRING) . "%";
-        $stmt = $pdo->prepare('SELECT * FROM staff WHERE staff.staff_firstname LIKE :ss OR staff.staff_lastname LIKE :ss OR staff.staff_email LIKE :ss OR staff.staff_id LIKE :ss');
+        $stmt = $pdo->prepare('SELECT * FROM hotel WHERE hotel_name LIKE :ss');
         $stmt->bindValue(':ss', $searchString);
         $stmt->execute();
     } else {
-        $stmt = $pdo->prepare('SELECT * FROM staff');
+        $stmt = $pdo->prepare('SELECT * FROM hotels');
         $stmt->execute();
     }
 
-    $allStaff = $stmt->fetchAll();
+    $allHotels = $stmt->fetchAll();
 ?>
 <?php require('./includes/header.html'); ?>
 <div class="container">
@@ -39,37 +39,35 @@
     </div>
 <div>
 
-        <table border="1" width="100%">
-            <tr>
-                <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
+<table border="1" width="100%">
+    <tr>
+        <th>ID</th>
+        <th>Hotel Name</th>
+        <th>Hotel Address</th>
+        <th>Hotel Rating</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
 
 
-        <?php
-        // output data of each row
-        foreach ($allStaff as $staff_item) {
-            $oneStaff = new HotelClasses\User();
-            $oneStaff->setId($staff_item->staff_id);
-            $oneStaff->setFirstName($staff_item->staff_firstname);
-            $oneStaff->setLastName($staff_item->staff_lastname);
-            $oneStaff->setEmail($staff_item->staff_email);
-            echo "<tr>";
-            echo "<td>" . $oneStaff->getId() . "</td>";
-            echo "<td>" . $oneStaff->getFirstName() . "</td>";
-            echo "<td>" . $oneStaff->getLastName() . "</td>";
-            echo "<td>" . $oneStaff->getEmail() . "</td>";
-            echo '<td><a href="cms-editcms.php?cms_id=' . $oneStaff->getId() . '">Edit</a></td>';
-            echo '<td><a href="cms-deletecms.php?cms_id=' . $oneStaff->getId() . '">Delete</a></td>';
-            echo "</tr>";
-        }
-        ?>
-        </table>
-    </div>
-</div>
+<?php
+// output data of each row
+foreach ($allHotels as $hotel_item) {
+    $oneHotel = new HotelClasses\Hotel();
+    $oneHotel->setId($hotel_item->hotel_id);
+    $oneHotel->setName($hotel_item->hotel_name);
+    $oneHotel->setAddress($hotel_item->hotel_address);
+    $oneHotel->setRating($hotel_item->hotel_rating);
+    echo "<tr>";
+    echo "<td>" . $oneHotel->getId() . "</td>";
+    echo "<td>" . $oneHotel->getName() . "</td>";
+    echo "<td>" . $oneHotel->getAddress() . "</td>";
+    echo "<td>" . $oneHotel->getRating() . "</td>";
+    echo '<td><a href="cms-edithotel.php?hotel_id=' . $oneHotel->getId() . '">Edit</a></td>';
+    echo '<td><a href="cms-deletehotel.php?hotel_id=' . $oneHotel->getId() . '">Delete</a></td>';
+    echo "</tr>";
+}
+?>
+</table>
 
 <?php require('./includes/footer.html'); ?>

@@ -55,19 +55,19 @@
             return $this->pictures;
         }
 
-        function addRoom($hotelRoom) {
-            array_push($this->hotelRooms, $hotelRoom);
+        function addRoom($room) {
+            array_push($this->rooms, $room);
         }
 
-        function removeRoom($hotelRoomId) {
-            foreach($this->hotelRooms as $num => $room) {
-                if ($this->hotelRooms[$num].getRoomId() == $hotelRoomId)
-                    unset($this->hotelRooms[$num]);
+        function removeRoom($roomId) {
+            foreach($this->rooms as $num => $room) {
+                if ($this->rooms[$num].getRoomId() == $roomId)
+                    unset($this->rooms[$num]);
             }
         }
 
         function getRoomArray() {
-            return $this->hotelRooms;
+            return $this->rooms;
         }
     }
 ?>

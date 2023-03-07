@@ -25,7 +25,7 @@
         $stmt = $pdo->prepare('SELECT * FROM hotel_pictures WHERE hotel_id=?');
         $stmt->execute([$editHotel->getId()]);
 
-        $picture_items=$stmt->fetchAll();
+        $picture_items = $stmt->fetchAll();
 
         foreach($picture_items as $picture) {
             $newPicture = new HotelClasses\HotelPicture;
@@ -34,7 +34,22 @@
 
             $editHotel->addPicture($newPicture);
         }
-     }
+
+        $stmt = $pdo->prepare('SELECT * FROM rooms WHERE hotel_id=?');
+        $stmt->execute([$editHotel->getId()]);
+
+        $room_items = $stmt->fetchAll();
+
+        foreach($room_items as $room) {
+            $newRoom = new HotelClasses\Room;
+            $newRoom->setId($room->room_id);
+            $newRoom->setLabel($room->room_label);
+            $newRoom->setPrice($room->room_price);
+
+            $editHotel->addRoom($newRoom);
+        }
+
+    }
     
     if (isset($_POST['update'])) {
         $hotel = new HotelClasses\Hotel();
@@ -123,6 +138,32 @@
                     <input required type="file" name="hotelPictureUpload" class="form-control" value="<?php echo $editHotel->getRating() ?>" />
                     <br />
                     <button name="uploadpic" type="submit" class="btn btn-primary">Upload Picture</button>
+                </div>
+                <br />
+                <div>
+                    <h3>Rooms</h3>
+                    <table border=1 width="100%">
+                        <tr>
+                            <th>Id</th>
+                            <th>Room Name/Number</th>
+                            <th>Price</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        <?php
+                            foreach ($editHotel->getRoomArray() as $room) {
+                                echo '<tr>';
+                                echo '<td>' . $room->getId() . '</td>';
+                                echo '<td>' . $room->getLabel() . '</td>';
+                                echo '<td>' . $room->getPrice() . '</td>';
+                                echo '<td><a href="cms-editroom.php?room_id=' . $room->getId() . '&hotel_id='. $editHotel->getId() .'">Edit</a></td>';
+                                echo '<td><a href="cms-deleteroom.php?room_id=' . $room->getId() . '&hotel_id='. $editHotel->getId() .'">Delete</a></td>';
+                                echo '</tr>';
+                            }
+                        ?>
+                        </tr>
+                    </table>
+                    <br />
+                    <a href="cms-registerroom.php?hotel_id=<?php echo $editHotel->getId() ?>"><button name="registerRoom" type="button" class="btn btn-primary">Register Room</button></a>
                 </div>
                 <br />
                 <div class="form-group">

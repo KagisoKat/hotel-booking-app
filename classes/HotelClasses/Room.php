@@ -1,48 +1,57 @@
 <?php
     namespace HotelClasses;
     class Room{
-        private $roomId;
-        private $roomNumber;
+        private $id;
+        private $label;
+        private $price;
         private $hotelId;
-        private $roomPictures = array();
+        private $pictures = array();
 
         function getId() {
-            return $this->roomId;
+            return $this->id;
         }
 
-        function getNumber() {
-            return $this->roomNumber;
+        function getLabel() {
+            return $this->label;
+        }
+
+        function getPrice() {
+            return $this->price;
         }
 
         function getHotelId() {
-            return $this->getHotelId;
+            return $this->hotelId;
         }
 
-        function setId($roomId) {
-            $this->roomId = $roomId;
+        function setId($id) {
+            $this->id = $id;
         }
 
-        function setNumber($roomNumber) {
-            $this->roomNumber = $roomNumber;
+        function setLabel($label) {
+            $this->label = $label;
+        }
+
+        function setPrice($price) {
+            $this->price = $price;
         }
 
         function setHotelId($hotelId) {
             $this->hotelId = $hotelId;
         }
 
-        function addPicture($roomPicture) {
-            array_push($this->roomPictures, $roomPicture);
+        function addPicture($picture) {
+            array_push($this->proomPictures, $picture);
         }
 
-        function removePicture($roomPicture) {
-            foreach($this->roomPictures as $num => $picture) {
-                if ($this->roomPicutres[$num] == $roomPicture)
-                    unset($this->roomPictures[$num]);
+        function removePicture($picture) {
+            foreach($this->pictures as $num => $picture) {
+                if ($this->picutres[$num] == $picture)
+                    unset($this->pictures[$num]);
             }
         }
 
         function getPictureArray() {
-            return $this->roomPictures;
+            return $this->pictures;
         }
     }
 ?>

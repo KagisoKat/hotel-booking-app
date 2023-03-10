@@ -5,29 +5,98 @@
     if (isset($_SESSION['userType'])) $userType=$_SESSION['userType'];
     else $userType='guest';
     require('./includes/header.html');
+    require_once('./config/db.php');
+    if (isset($_POST['search'])) {
+        $searchString = "%" . filter_var($_POST["searchText"], FILTER_SANITIZE_STRING) . "%";
+        $stmt = $pdo->prepare('SELECT * FROM hotels WHERE hotels.hotel_name LIKE :ss');
+        $stmt->bindValue(':ss', $searchString);
+        $stmt->execute();
+    } else {
+        $stmt = $pdo->prepare('SELECT * FROM hotels');
+        $stmt->execute();
+    }
+
+    $allHotels = $stmt->fetchAll();
 ?>
 
-<div class="container">
-    <div class= "card bg-light mb-3">
-        <div class="card-header">
-            <?php  if ($userType == 'user') { ?>
-                <h5>Welcome <?php echo $user->getTitle() . " " . $user->getFirstName() . " " . $user->getLastName() . "!" ?></h5>
-            <?php  } elseif ($userType == 'cms') { ?>
-                <h5>Welcome <?php echo "CMS " . $staff->getFirstName() . " " . $staff->getLastName() . "!" ?></h5>
-            <?php } else { ?>
-                <h5>Welcome Guest!</h5>
-            <?php } ?>
+<div class="content">
+    <form method="post" name="searchForm" action="cms-users.php">
+        <input type="text" name="searchText" class="form-control mt-2" />
+        <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
+    </form>
+</div>
+<div class="row row-cols-md-4">
+    <?php 
+        foreach ($allHotels as $hotel) { 
+            $hotelCard=new HotelClasses\Hotel();
+            $hotelCard->setId($hotel->hotel_id);
+            $hotelCard->setName($hotel->hotel_name);
+            $hotelCard->setAddress($hotel->hotel_address);
+            $hotelCardStmt = $pdo->prepare('SELECT * FROM rooms WHERE hotel_id=?');
+            $hotelCardStmt->execute([$hotelCard->getId()]);
+            $hotelCardRoomsResult = $hotelCardStmt->fetchAll();
+
+            $numRooms=0;
+            $lowestPrice=9999999.0;
+            foreach ($hotelCardRoomsResult as $room_item) {
+                $numRooms++;
+                $hotelCardRoom = new HotelClasses\Room();
+                $hotelCardRoom->setId($room_item->room_id);
+                $hotelCardRoom->setLabel($room_item->room_label);
+                $hotelCardRoom->setPrice($room_item->room_price);
+                if ($lowestPrice > $hotelCardRoom->getPrice()) $lowestPrice = $hotelCardRoom->getPrice();
+                $hotelCard->addRoom($hotelCardRoom);
+            }
+
+            $hotelCardPictureStmt = $pdo->prepare('SELECT * FROM hotel_pictures WHERE hotel_id=?');
+            $hotelCardPictureStmt->execute([$hotelCard->getId()]);
+            $hotelCardPicture = $hotelCardPictureStmt->fetchAll();
+
+            foreach ($hotelCardPicture as $picture_item) {
+                $hotelCardPicture = new HotelClasses\HotelPicture;
+                $hotelCardPicture->setId($picture_item->hp_id);
+                $hotelCardPicture->setFilename($picture_item->hp_filename);
+                $hotelCard->addPicture($hotelCardPicture);
+            }
+
+            //echo "<pre>";
+            //var_dump($hotelCard);
+            //echo "</pre>";
+    ?>
+        <div class="col">
+            <div class="card mx-2 my-2">
+                
+                <div id="hotelControls" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner card-image-top">
+                        <?php $numPictures = 0 ?>
+                        <?php foreach ($hotelCard->getPictureArray() as $picture) { ?>
+                            <?php $numPictures++ ?>
+                            <div class="carousel-item<?php if ($numPictures == 1) echo ' active' ?>">
+                                <img src="./hotel-images/<?php echo $picture->getFilename() ?>" class="d-block w-100" />
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <a class="carousel-control-prev" href="#hotelControls" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#hotelControls" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                 </div>
+
+                <div class="card-body">
+                    <h5 class="card-title"><?php echo $hotelCard->getName() ?></h5>
+                    <h6 class="card-title">From: <?php echo $lowestPrice ?></h6>
+                    <p class="card-text"><?php echo $hotelCard->getAddress() ?></p>
+                </div>
+                <div class="card-footer">
+                    <a href="bookme?id=<?php echo $hotelCard->getId() ?>"><button type="button">Book</button></a>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <h1>Show hotels here regardless of login status</h1>
-            <?php  if ($userType == "user") { ?>
-                <h4>Currently logged in as a user.</h4>
-            <?php  } elseif ($userType == "cms") { ?>
-                <h4>Currently logged in as CMS.</h4>
-            <?php } else { ?>
-                <h4>Currently logged in as a guest.</h4>
-            <?php } ?>
-        </div>
-    </div>
+    <?php } ?>
+
 </div>
 <?php require('./includes/footer.html'); ?>

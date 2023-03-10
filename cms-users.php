@@ -42,6 +42,7 @@
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Address</th>
+                <th>Create Booking</th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
@@ -64,6 +65,7 @@
             echo "<td>" . $oneUser->getLastName() . "</td>";
             echo "<td>" . $oneUser->getEmail() . "</td>";
             echo "<td>" . $oneUser->getAddress() . "</td>";
+            echo '<td><a href="cms-createbooking.php?user_id=' . $oneUser->getId() . '">Create Booking</a></td>';
             echo '<td><a href="cms-edituser.php?user_id=' . $oneUser->getId() . '">Edit</a></td>';
             echo '<td><a href="cms-deleteuser.php?user_id=' . $oneUser->getId() . '">Delete</a></td>';
             echo "</tr>";

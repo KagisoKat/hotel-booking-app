@@ -22,7 +22,7 @@
                         <li><a href="login.php">Login</a></li>
                         <li><a href="cms.php">CMS</a></li><?php
                     } elseif ($_SESSION['userType'] == 'user') { ?>
-                        <li>User</li><?php
+                        <li><a href="bookings.php">Bookings</a></li> <?php
                     } elseif ($_SESSION['userType'] == "cms") { ?>
                         <li><a href="cms-users.php">Users</a></li>
                         <li><a href="cms-bookings.php">Bookings</a></li>

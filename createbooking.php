@@ -6,8 +6,7 @@
     require('./config/db.php');
 
     if ($userType=='guest')
-        header("Location: register.php");
-    
+        header("Location: index.php");
     
     if (isset($_GET['user_id'])) {
         $forUser=$_GET['user_id'];
@@ -35,22 +34,26 @@
     
     if (isset($_POST['book'])) {
         $booking = new HotelClasses\Booking();
-        $booking->setUserId(filter_var($_POST["userName"], FILTER_SANITIZE_STRING));
-        $booking->setHotelId(filter_var($_POST["hotelName"], FILTER_SANITIZE_STRING));
-        $booking->setRoomId(filter_var($_POST["roomName"], FILTER_SANITIZE_STRING));
+        $booking->setUser(new HotelClasses\User());
+        $booking->getUser()->setId(filter_var($_POST["userName"], FILTER_SANITIZE_STRING));
+        $booking->setHotel(new HotelClasses\Hotel());
+        $booking->getHotel()->setId(filter_var($_POST["hotelName"], FILTER_SANITIZE_STRING));
+        $booking->setRoom(new HotelClasses\Room());
+        $booking->getRoom()->setId(filter_var($_POST["roomName"], FILTER_SANITIZE_STRING));
         $booking->setStartDate(filter_var($_POST["startDate"], FILTER_SANITIZE_STRING));
         $booking->setEndDate(filter_var($_POST["endDate"], FILTER_SANITIZE_STRING));
         
         $stmt = $pdo->prepare('INSERT INTO bookings(booking_startdate, booking_enddate, user_id, room_id) values (?, ?, ?, ?)');
-        $stmt->execute([$booking->getStartDate(), $booking->getEndDate(), $booking->getUserId(), $booking->getRoomId()]);
-        // Go to a booking created page
-        //header('Location: index.php');
+        $stmt->execute([$booking->getStartDate(), $booking->getEndDate(), $booking->getUser()->getId(), $booking->getRoom()->getId()]);
+        header("Location: " . $_SERVER['REDIRECT_URI']);
     }
+       
+       
 ?>
 
 <script language="javascript" type="text/javascript">
     function doReload(userId, hotelId) {
-        document.location = 'cms-createbooking.php?user_id=' + userId + '&hotel_id=' + hotelId;
+        document.location = 'createbooking.php?user_id=' + userId + '&hotel_id=' + hotelId;
     }
 </script>
 
@@ -60,7 +63,7 @@
     <div class="card">
         <div class="card-header bg-light mb-3">Register Hotel</div>
         <div class="card-body">
-            <form action="cms-createbooking.php?" method="POST">
+            <form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="POST">
                 <div class="form-group">
                     <label for="userName">User Name</label>
                     <select name="userName">

@@ -67,7 +67,7 @@
             <div class="card mx-2 my-2">
                 
                 <div id="hotelControls" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner card-image-top">
+                    <div class="carousel-inner"> <!-- <div class="carousel-inner card-image-top"> -->
                         <?php $numPictures = 0 ?>
                         <?php foreach ($hotelCard->getPictureArray() as $picture) { ?>
                             <?php $numPictures++ ?>
@@ -92,7 +92,13 @@
                     <p class="card-text"><?php echo $hotelCard->getAddress() ?></p>
                 </div>
                 <div class="card-footer">
-                    <a href="bookme?id=<?php echo $hotelCard->getId() ?>"><button type="button">Book</button></a>
+                    <?php if ($_SESSION['userType'] == 'cms') { ?>
+                        <a href="createbooking.php?hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button">Book</button></a>
+                    <?php } elseif ($_SESSION['userType'] == 'user') { ?>
+                        <a href="createbooking.php?user_id=<?php echo $_SESSION['userId']; ?>&hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button">Book</button></a>
+                    <?php } else { ?>
+                        <a href="register.php"><button type="button">Register or log in to Book</button></a>
+                    <?php } ?>
                 </div>
             </div>
         </div>

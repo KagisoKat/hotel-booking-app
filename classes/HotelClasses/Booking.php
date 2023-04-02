@@ -7,6 +7,8 @@
         private $room;
         private $startDate;
         private $endDate;
+        private $price;
+        private $status;
 
         function getId() {
             return $this->id;
@@ -32,6 +34,37 @@
             return $this->endDate;
         }
 
+        function getNights() {
+            return round((strtotime($this->endDate) - strtotime($this->startDate)) / 86400);
+        }
+
+        function getPrice() {
+            return $this->getNights() * $this->getRoom()->getPrice();
+        }
+
+        function getStatus() {
+            $currentTime=time();
+            if ($this->status == 'active') {
+                if ($currentTime > strtotime($this->endDate)) {
+                    return 'expired';
+                } elseif (($currentTime < strtotime($this->endDate)) && ($currentTime > strtotime($this->startDate))) {
+                    return 'active';
+                }
+                return 'pending';
+            }
+            return $this->status;
+        }
+
+        function getCancellable() {
+            $currentTime=time();
+            $diff=(strtotime($this->getStartDate()) - $currentTime) / 60 / 60;
+            if ($diff < 48 || $this->getStatus() == 'cancelled' || $this->getStatus() == 'expired' || $this->getStatus() == 'active') {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
         function setId($id) {
             $this->id = $id;
         }
@@ -54,6 +87,10 @@
 
         function setEndDate($endDate) {
             $this->endDate = $endDate;
+        }
+
+        function setStatus($status) {
+            $this->status = $status;
         }
     }
 ?>

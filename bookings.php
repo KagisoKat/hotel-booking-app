@@ -8,16 +8,18 @@
     require('./lib/get-user-details.php');
     require('./config/db.php');
     
-    if ($userType!='cms')
+    if ($userType!='user')
         header("Location: index.php");
 
     if (isset($_POST['search'])) {
         $searchString = "%" . filter_var($_POST["searchText"], FILTER_SANITIZE_STRING) . "%";
-        $stmt = $pdo->prepare('SELECT bookings.booking_id, users.user_email, users.user_title, users.user_firstname, users.user_lastname, bookings.booking_startdate, bookings.booking_enddate, hotels.hotel_name, rooms.room_label, rooms.room_price, bookings.booking_status FROM users INNER JOIN bookings ON users.user_id=bookings.user_id INNER JOIN rooms ON rooms.room_id = bookings.room_id INNER JOIN hotels ON rooms.hotel_id = hotels.hotel_id WHERE users.user_email LIKE :ss OR bookings.booking_id LIKE :ss OR users.user_firstname LIKE :ss OR users.user_lastname LIKE :ss');
+        $stmt = $pdo->prepare('SELECT bookings.booking_id, users.user_email, users.user_title, users.user_firstname, users.user_lastname, bookings.booking_startdate, bookings.booking_enddate, hotels.hotel_name, rooms.room_label, rooms.room_price, bookings.booking_status FROM users INNER JOIN bookings ON users.user_id=bookings.user_id INNER JOIN rooms ON rooms.room_id = bookings.room_id INNER JOIN hotels ON rooms.hotel_id = hotels.hotel_id WHERE (users.user_email LIKE :ss OR bookings.booking_id LIKE :ss OR users.user_firstname LIKE :ss OR users.user_lastname LIKE :ss) AND users.user_id=:userid');
         $stmt->bindValue(':ss', $searchString);
+        $stmt->bindValue(':userid', $_SESSION['userId']);
         $stmt->execute();
     } else {
-        $stmt = $pdo->prepare('SELECT bookings.booking_id, users.user_email, users.user_title, users.user_firstname, users.user_lastname, bookings.booking_startdate, bookings.booking_enddate, hotels.hotel_name, rooms.room_label, rooms.room_price, bookings.booking_status FROM users INNER JOIN bookings ON users.user_id=bookings.user_id INNER JOIN rooms ON rooms.room_id = bookings.room_id INNER JOIN hotels ON rooms.hotel_id = hotels.hotel_id');
+        $stmt = $pdo->prepare('SELECT bookings.booking_id, users.user_email, users.user_title, users.user_firstname, users.user_lastname, bookings.booking_startdate, bookings.booking_enddate, hotels.hotel_name, rooms.room_label, rooms.room_price, bookings.booking_status FROM users INNER JOIN bookings ON users.user_id=bookings.user_id INNER JOIN rooms ON rooms.room_id = bookings.room_id INNER JOIN hotels ON rooms.hotel_id = hotels.hotel_id WHERE users.user_id=:userid');
+        $stmt->bindValue(':userid', $_SESSION['userId']);
         $stmt->execute();
     }
 
@@ -27,7 +29,7 @@
 <div class="container">
 
     <div class="content">
-        <form method="post" name="searchForm" action="cms-bookings.php">
+        <form method="post" name="searchForm" action="bookings.php">
             <input type="text" name="searchText" class="form-control mt-2" />
             <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
         </form>
@@ -37,10 +39,6 @@
         <table border="1" width="100%">
             <tr>
                 <th>ID</th>
-                <th>Email</th>
-                <th>Title</th>
-                <th>First Name</th>
-                <th>Last Name</th>
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Hotel Name</th>
@@ -50,8 +48,6 @@
                 <th>Status</th>
                 <th>Receipt</th>
                 <th>Cancel</th>
-                <th>Edit</th>
-                <th>Delete</th>
             </tr>
 
 
@@ -76,10 +72,6 @@
 
             echo "<tr>";
             echo "<td>" . $oneBooking->getId() . "</td>";
-            echo "<td>" . $oneBooking->getUser()->getEmail() . "</td>";
-            echo "<td>" . $oneBooking->getUser()->getTitle() . "</td>";
-            echo "<td>" . $oneBooking->getUser()->getFirstName() . "</td>";
-            echo "<td>" . $oneBooking->getUser()->getLastName() . "</td>";
             echo "<td>" . $oneBooking->getStartDate() . "</td>";
             echo "<td>" . $oneBooking->getEndDate() . "</td>";
             echo "<td>" . $oneBooking->getHotel()->getName() . "</td>";
@@ -93,10 +85,8 @@
             if ($oneBooking->getCancellable())
                 echo '<a href="cancelbooking.php?booking_id=' . $oneBooking->getId() . '">Cancel</a>';
             else
-                echo '<span hidden>Hidden</span>';
+                echo 'N/A';
             echo '</td>';
-            echo '<td><a href="cms-editbooking.php?booking_id=' . $oneBooking->getId() . '">Edit</a></td>';
-            echo '<td><a href="cms-deletebooking.php?booking_id=' . $oneBooking->getId() . '">Delete</a></td>';
             echo "</tr>";
         }
         ?>

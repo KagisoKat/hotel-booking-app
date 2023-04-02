@@ -13,7 +13,7 @@
 
     if (isset($_POST['search'])) {
         $searchString = "%" . filter_var($_POST["searchText"], FILTER_SANITIZE_STRING) . "%";
-        $stmt = $pdo->prepare('SELECT * FROM hotel WHERE hotel_name LIKE :ss');
+        $stmt = $pdo->prepare('SELECT * FROM hotel WHERE hotel_name LIKE :ss OR hotel_address LIKE :ss');
         $stmt->bindValue(':ss', $searchString);
         $stmt->execute();
     } else {

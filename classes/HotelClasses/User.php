@@ -6,6 +6,7 @@
         private $firstName;
         private $lastName;
         private $email;
+        private $phone;
         private $address;
         private $password;
         private $passwordHashed;
@@ -32,6 +33,10 @@
 
         function getEmail() {
             return $this->email;
+        }
+
+        function getPhone() {
+            return $this->phone;
         }
 
         function getPassword() {
@@ -64,6 +69,10 @@
 
         function setEmail($email) {
             $this->email = $email;
+        }
+
+        function setPhone($phone) {
+            $this->phone = $phone;
         }
 
         function setPassword($password) {

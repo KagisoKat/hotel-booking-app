@@ -41,6 +41,7 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
+                <th>Phone</th>
                 <th>Address</th>
                 <th>Create Booking</th>
                 <th>Edit</th>
@@ -57,6 +58,7 @@
             $oneUser->setFirstName($user_item->user_firstname);
             $oneUser->setLastName($user_item->user_lastname);
             $oneUser->setEmail($user_item->user_email);
+            $oneUser->setPhone($user_item->user_phone);
             $oneUser->setAddress($user_item->user_address);
             echo "<tr>";
             echo "<td>" . $oneUser->getId() . "</td>";
@@ -64,8 +66,9 @@
             echo "<td>" . $oneUser->getFirstName() . "</td>";
             echo "<td>" . $oneUser->getLastName() . "</td>";
             echo "<td>" . $oneUser->getEmail() . "</td>";
+            echo "<td>" . $oneUser->getPhone() . "</td>";
             echo "<td>" . $oneUser->getAddress() . "</td>";
-            echo '<td><a href="cms-createbooking.php?user_id=' . $oneUser->getId() . '">Create Booking</a></td>';
+            echo '<td><a href="createbooking.php?user_id=' . $oneUser->getId() . '">Create Booking</a></td>';
             echo '<td><a href="cms-edituser.php?user_id=' . $oneUser->getId() . '">Edit</a></td>';
             echo '<td><a href="cms-deleteuser.php?user_id=' . $oneUser->getId() . '">Delete</a></td>';
             echo "</tr>";

@@ -8,52 +8,67 @@
     if ($userType!='cms')
         header("Location: index.php");
     
-    if (isset($_GET['user_id'])) {
-        $forUser=$_GET['user_id'];
-    } else {
-        $firstUserPDO = $pdo->prepare('SELECT user_id FROM users LIMIT 1');
-        $firstUserPDO->execute();
-        $forUser = $firstUserPDO->fetch()->user_id;
-    }
+    //if (isset($_GET['user_id'])) {
+    //    $forUser=$_GET['user_id'];
+    //} else {
+    //    $firstUserPDO = $pdo->prepare('SELECT user_id FROM users LIMIT 1');
+    //    $firstUserPDO->execute();
+    //    $forUser = $firstUserPDO->fetch()->user_id;
+    //}
     
-    if (isset($_GET['hotel_id'])) {
-        $forHotel=$_GET['hotel_id'];
-    } else {
-        $firstHotelPDO = $pdo->prepare('SELECT hotel_id FROM hotels LIMIT 1');
-        $firstHotelPDO->execute();
-        $forHotel = $firstHotelPDO->fetch()->hotel_id;
-    }
+    //if (isset($_GET['hotel_id'])) {
+    //    $forHotel=$_GET['hotel_id'];
+    //} else {
+    //    $firstHotelPDO = $pdo->prepare('SELECT hotel_id FROM hotels LIMIT 1');
+    //    $firstHotelPDO->execute();
+    //    $forHotel = $firstHotelPDO->fetch()->hotel_id;
+    //}
     
-    if (isset($_GET['room_id'])) {
-        $forRoom=$_GET['room_id'];
+    //if (isset($_GET['room_id'])) {
+    //    $forRoom=$_GET['room_id'];
+    //} else {
+    //    $firstRoomPDO = $pdo->prepare('SELECT room_id FROM rooms WHERE hotel_id = ? LIMIT 1');
+    //    $firstRoomPDO->execute([$forHotel]);
+    //    $forRoom = $firstRoomPDO->fetch()->room_id;
+    //}
+
+    if (isset($_GET['booking_id'])) {
+        $editBooking = new HotelClasses\Booking();
+        $editBooking->setId($_GET['booking_id']);
+
+        $stmt = $pdo->prepare('SELECT * FROM booking WHERE booking_id=?');
+        $stmt->execute([$editBooking->getId()]);
+
+        $booking_item=$stmt->fetch();
+
+        $editBooking->setUser(new HotelClasses\User);
+        $editBooking->getUser()->setId($booking_item->user_id);
+        $editBooking->setRoom(new HotelClasses\Room);
+        $editBooking->getRoom()->setId($booking_item->room_id);
+        $editBooking->setStartDate($booking_item->booking_startdate);
+        $editBooking->setEndDate($booking_item->booking_enddate);
     } else {
-        $firstRoomPDO = $pdo->prepare('SELECT room_id FROM rooms WHERE hotel_id = ? LIMIT 1');
-        $firstRoomPDO->execute([$forHotel]);
-        $forRoom = $firstRoomPDO->fetch()->room_id;
+        header("Location: index.php");
     }
     
     if (isset($_POST['book'])) {
         $booking = new HotelClasses\Booking();
-        $booking->setUser(new HotelClasses\User());
-        $booking->getUser()->setId(filter_var($_POST["userName"], FILTER_SANITIZE_STRING));
-        $booking->setHotel(new HotelClasses\Hotel());
-        $booking->getHotel()->setId(filter_var($_POST["hotelName"], FILTER_SANITIZE_STRING));
-        $booking->setRoom(new HotelClasses\Room());
-        $booking->getRoom()->setId(filter_var($_POST["roomName"], FILTER_SANITIZE_STRING));
+        $booking->setUserId(filter_var($_POST["userName"], FILTER_SANITIZE_STRING));
+        $booking->setHotelId(filter_var($_POST["hotelName"], FILTER_SANITIZE_STRING));
+        $booking->setRoomId(filter_var($_POST["roomName"], FILTER_SANITIZE_STRING));
         $booking->setStartDate(filter_var($_POST["startDate"], FILTER_SANITIZE_STRING));
         $booking->setEndDate(filter_var($_POST["endDate"], FILTER_SANITIZE_STRING));
         
         $stmt = $pdo->prepare('INSERT INTO bookings(booking_startdate, booking_enddate, user_id, room_id) values (?, ?, ?, ?)');
-        $stmt->execute([$booking->getStartDate(), $booking->getEndDate(), $booking->getUser()->getId(), $booking->getRoom()->getId()]);
-        header("Location: " . $_SERVER['REDIRECT_URI']);
+        //$stmt->execute([$booking->getStartDate(), $booking->getEndDate(), $booking->getUserId(), $booking->getRoomId()]);
+        // Go to a booking created page
+        //header('Location: index.php');
     }
-       
-       
 ?>
 
 <script language="javascript" type="text/javascript">
     function doReload(userId, hotelId) {
-        document.location = 'cms-createbooking.php?user_id=' + userId + '&hotel_id=' + hotelId;
+        document.location = 'cms-editbooking.php?booking_id=' + $editBooking->getId() + '&hotel_id=' + hotelId;
     }
 </script>
 
@@ -63,7 +78,7 @@
     <div class="card">
         <div class="card-header bg-light mb-3">Register Hotel</div>
         <div class="card-body">
-            <form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="POST">
+            <form action="cms-users.php?" method="POST">
                 <div class="form-group">
                     <label for="userName">User Name</label>
                     <select name="userName">

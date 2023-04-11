@@ -78,14 +78,14 @@
         $room = new HotelClasses\Room;
         $hotel->setId($otherRoom->hotel_id);
         $hotel->setName($otherRoom->hotel_name);
-        echo "Adding Hotel: (" . $hotel->getId() . ") " . $hotel->getName();
+        //echo "Adding Hotel: (" . $hotel->getId() . ") " . $hotel->getName();
         $hotel->setAddress($otherRoom->hotel_address);
         $hotel->setRating((int)$otherRoom->hotel_rating);
         $room->setId($otherRoom->room_id);
         $room->setLabel($otherRoom->room_label);
         $room->setPrice($otherRoom->room_price);
         $hotel->addRoom($room);
-        echo ". Adding Room: (" . $room->getId() . ") " . $room->getLabel() . "<br/>";
+        //echo ". Adding Room: (" . $room->getId() . ") " . $room->getLabel() . "<br/>";
 
         array_push($compareHotelArray, $hotel);
     }

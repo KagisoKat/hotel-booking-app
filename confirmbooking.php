@@ -12,9 +12,12 @@
     if (!isset($_SESSION['createBooking']))
         header("Location: index.php");
 
+    require('./lib/gen-uuid.php');
 
     require('./includes/header.html');
     require_once('./config/db.php');
+
+
 
     $booking = unserialize($_SESSION['createBooking']);
 
@@ -63,11 +66,39 @@
         $booking->getRoom()->addPicture($picture);
     }
 
+    $compareHotelArray = array();
+
+    $stmt = $pdo->prepare('SELECT hotels.hotel_id, rooms.room_id, hotels.hotel_name, hotels.hotel_address, hotels.hotel_rating, rooms.room_label, rooms.room_price FROM hotels INNER JOIN rooms ON hotels.hotel_id = rooms.hotel_id WHERE room_id != ?');
+    $stmt->execute([$booking->getRoom()->getId()]);
+
+    $otherRooms = $stmt->fetchAll();
+
+    foreach ($otherRooms as $otherRoom) {
+        $hotel = new HotelClasses\Hotel;
+        $room = new HotelClasses\Room;
+        $hotel->setId($otherRoom->hotel_id);
+        $hotel->setName($otherRoom->hotel_name);
+        echo "Adding Hotel: (" . $hotel->getId() . ") " . $hotel->getName();
+        $hotel->setAddress($otherRoom->hotel_address);
+        $hotel->setRating((int)$otherRoom->hotel_rating);
+        $room->setId($otherRoom->room_id);
+        $room->setLabel($otherRoom->room_label);
+        $room->setPrice($otherRoom->room_price);
+        $hotel->addRoom($room);
+        echo ". Adding Room: (" . $room->getId() . ") " . $room->getLabel() . "<br/>";
+
+        array_push($compareHotelArray, $hotel);
+    }
+
     if (isset($_POST["confirm"])) {
-        $stmt = $pdo->prepare('INSERT INTO bookings(booking_startdate, booking_enddate, user_id, room_id) values (?, ?, ?, ?)');
-        $stmt->execute([$booking->getStartDate(), $booking->getEndDate(), $booking->getUser()->getId(), $booking->getRoom()->getId()]);
+        $booking->setUuid(genuuid());
+        $stmt = $pdo->prepare('INSERT INTO bookings(booking_startdate, booking_enddate, booking_uuid, user_id, room_id) values (?, ?, ?, ?, ?)');
+        $stmt->execute([$booking->getStartDate(), $booking->getEndDate(), $booking->getUuid(), $booking->getUser()->getId(), $booking->getRoom()->getId()]);
+        $stmt = $pdo->prepare('SELECT booking_id FROM bookings WHERE booking_uuid = ?');
+        $stmt->execute([$booking->getUuid()]);
+        $idRecord = $stmt->fetch();
         unset($_SESSION['createBooking']);
-        header("Location: thankyoubooking.php");
+        header("Location: thankyoubooking.php?booking_id=" . $idRecord->booking_id);
     }
 
     if (isset($_POST["back"])) {
@@ -210,4 +241,50 @@
         </div>
     </div>
 </div>
+
+<?php
+    $booking->getHotel()->addRoom($booking->getRoom());
+?>
+
+<div class="container">
+    <div class= "card bg-light mb-3">
+        <div class="card-header">
+            <h5>See other options:</h5>
+        </div>
+        <div class="card-body">
+            <table border="1" width="100%">
+                <tr>
+                    <th>Hotel Name</th>    
+                    <th>Hotel Rating</th>    
+                    <th>Hotel Address</th>    
+                    <th>Room Name</th>    
+                    <th>Room Price</th>    
+                    <th>Price Comparison</th>
+                    <th>Rating Comparison</th>
+                    <th>Book</th>
+                </tr>
+                <?php foreach ($compareHotelArray as $compareHotel) { ?>
+                    <tr>
+                        <td><a href="viewhotel.php?hotel_id=<?php echo $compareHotel->getId() ?>"><?php echo $compareHotel->getName() ?></a></td>
+                        <td>
+                            <?php 
+                                for ($starCount = 0; $starCount < $compareHotel->getRating(); $starCount++) {
+                                    //echo "\u{2730}";
+                                    echo "\u{272D}";
+                                } 
+                            ?>
+                        </td>
+                        <td><?php echo $compareHotel->getAddress() ?></td>
+                        <td><?php echo $compareHotel->getRoomArray()[0]->getLabel() ?></td>
+                        <td><?php echo $compareHotel->getRoomArray()[0]->getPrice() ?></td>
+                        <td><?php echo HotelClasses\Hotel::compareRoomPrices($booking->getHotel(), $compareHotel) ?></td>
+                        <td><?php echo HotelClasses\Hotel::compareHotelRatings($booking->getHotel(), $compareHotel) ?></td>
+                        <td><a href="createbooking.php?hotel_id=<?php echo $compareHotel->getId(); ?>&room_id=<?php echo $compareHotel->getRoomArray()[0]->getId(); ?>">Book</a></td>
+                    </tr>
+                <?php } ?>
+            </table>
+        </div>
+    </div>
+</div>
+
 <?php require('./includes/footer.html'); ?>

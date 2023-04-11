@@ -50,8 +50,9 @@
         $_SESSION['createBooking'] = serialize($booking);
         
        if ($_SESSION['userType'] == "cms") {
-            $stmt = $pdo->prepare('INSERT INTO bookings(booking_startdate, booking_enddate, user_id, room_id) values (?, ?, ?, ?)');
-            $stmt->execute([$booking->getStartDate(), $booking->getEndDate(), $booking->getUser()->getId(), $booking->getRoom()->getId()]);
+            $booking->setUuid(genuuid());
+            $stmt = $pdo->prepare('INSERT INTO bookings(booking_startdate, booking_enddate, booking_uuid, user_id, room_id) values (?, ?, ?, ?, ?)');
+            $stmt->execute([$booking->getStartDate(), $booking->getEndDate(), $booking->getUuid(), $booking->getUser()->getId(), $booking->getRoom()->getId()]);
             header("Location: " . $_SERVER['REDIRECT_URI']);
         } elseif ($_SESSION['userType'] == "user") {
             header("Location: confirmbooking.php");

@@ -9,6 +9,7 @@
         private $endDate;
         private $price;
         private $status;
+        private $uuid;
 
         function getId() {
             return $this->id;
@@ -40,6 +41,10 @@
 
         function getPrice() {
             return $this->getNights() * $this->getRoom()->getPrice();
+        }
+
+        function getUuid() {
+            return $this->uuid;
         }
 
         function getStatus() {
@@ -91,6 +96,10 @@
 
         function setStatus($status) {
             $this->status = $status;
+        }
+
+        function setUuid($uuid) {
+            $this->uuid = $uuid;
         }
     }
 ?>

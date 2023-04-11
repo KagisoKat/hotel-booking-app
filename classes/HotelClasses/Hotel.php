@@ -8,66 +8,94 @@
         private $pictures = array();
         private $rooms = array();
 
-        function getId() {
+        public function getId() {
             return $this->id;
         }
 
-        function getName() {
+        public function getName() {
             return $this->name;
         }
 
-        function getAddress() {
+        public function getAddress() {
             return $this->address;
         }
 
-        function getRating() {
+        public function getRating() {
             return $this->rating;
         }
 
-        function setId($id) {
+        public function setId($id) {
             $this->id = $id;
         }
 
-        function setName($name) {
+        public function setName($name) {
             $this->name = $name;
         }
 
-        function setAddress($address) {
+        public function setAddress($address) {
             $this->address = $address;
         }
 
-        function setRating($rating) {
+        public function setRating($rating) {
             $this->rating = $rating;
         }
 
-        function addPicture($picture) {
+        public function addPicture($picture) {
             array_push($this->pictures, $picture);
         }
 
-        function removePicture($pictureId) {
+        public function removePicture($pictureId) {
             foreach($this->pictures as $num => $picture) {
                 if ($this->pictures[$num] == $pictureId)
                     unset($this->pictures[$num]);
             }
         }
 
-        function getPictureArray() {
+        public function getPictureArray() {
             return $this->pictures;
         }
 
-        function addRoom($room) {
+        public function addRoom($room) {
             array_push($this->rooms, $room);
         }
 
-        function removeRoom($roomId) {
+        public function removeRoom($roomId) {
             foreach($this->rooms as $num => $room) {
                 if ($this->rooms[$num].getRoomId() == $roomId)
                     unset($this->rooms[$num]);
             }
         }
 
-        function getRoomArray() {
+        public function getRoomArray() {
             return $this->rooms;
+        }
+
+        public static function compareRoomPrices($hotel1, $hotel2) {
+            $difference = $hotel1->getRoomArray()[0]->getPrice() - $hotel2->getRoomArray()[0]->getPrice();
+            if ($difference < 0) {
+                return "<span style=\"color: red;\">\u{25b2}" . abs($difference). '</span>';
+            } elseif ($difference > 0) {
+                return "<span style=\"color: blue;\">\u{25bc}" . abs($difference) . '</span>';
+            }
+            return '<span style="color: black;">' . abs($difference). '</span>';
+        }
+
+        //public static function compareHotelRatings($hotel1, $hotel2) {
+        public static function compareHotelRatings($hotel1, $hotel2) {
+            $difference = $hotel1->getRating() - $hotel2->getRating();
+            $returnString = "<span style=\"color: ";
+            if ($difference > 0) {
+                $returnString .= "red;\">\u{25bc}";
+            } elseif ($difference < 0) {
+                $returnString .= "blue;\">\u{25b2}";
+            } else {
+                $returnString .= "black;\">";
+            }
+            for ($starCount = 0; $starCount < abs($difference); $starCount++) {
+                $returnString .= "\u{272D}";
+            } 
+            $returnString .= '</span>';
+            return $returnString;
         }
     }
 ?>

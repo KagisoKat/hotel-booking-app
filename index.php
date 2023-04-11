@@ -20,7 +20,7 @@
 ?>
 
 <div class="content">
-    <form method="post" name="searchForm" action="cms-users.php">
+    <form method="post" name="searchForm" action="index.php">
         <input type="text" name="searchText" class="form-control mt-2" />
         <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
     </form>
@@ -32,6 +32,7 @@
             $hotelCard->setId($hotel->hotel_id);
             $hotelCard->setName($hotel->hotel_name);
             $hotelCard->setAddress($hotel->hotel_address);
+            $hotelCard->setRating((int)$hotel->hotel_rating);
             $hotelCardStmt = $pdo->prepare('SELECT * FROM rooms WHERE hotel_id=?');
             $hotelCardStmt->execute([$hotelCard->getId()]);
             $hotelCardRoomsResult = $hotelCardStmt->fetchAll();
@@ -69,12 +70,20 @@
                 <div id="hotelControls" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner"> <!-- <div class="carousel-inner card-image-top"> -->
                         <?php $numPictures = 0 ?>
-                        <?php foreach ($hotelCard->getPictureArray() as $picture) { ?>
+                        <?php
+                            if (sizeof($hotelCard->getPictureArray())) {
+                                foreach ($hotelCard->getPictureArray() as $picture) {
+                        ?>
                             <?php $numPictures++ ?>
                             <div class="carousel-item<?php if ($numPictures == 1) echo ' active' ?>">
                                 <img src="./hotel-images/<?php echo $picture->getFilename() ?>" class="d-block w-100" />
                             </div>
-                        <?php } ?>
+                        <?php
+                                }
+                            } else {
+                                echo "<span>Picture Not Available</span>";
+                            }
+                        ?>
                     </div>
                     <a class="carousel-control-prev" href="#hotelControls" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -88,16 +97,25 @@
 
                 <div class="card-body">
                     <h5 class="card-title"><?php echo $hotelCard->getName() ?></h5>
+                    <h6>
+                    <?php
+                        for ($starCount = 0; $starCount < $hotelCard->getRating(); $starCount++) {
+                            //echo "\u{2730}";
+                            echo "\u{272D}";
+                        } 
+                    ?>
+                    </h6>
                     <h6 class="card-title">From: <?php echo $lowestPrice ?></h6>
                     <p class="card-text"><?php echo $hotelCard->getAddress() ?></p>
                 </div>
                 <div class="card-footer">
+                    <a href="viewhotel.php?hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">View Hotel</button></a>
                     <?php if ($_SESSION['userType'] == 'cms') { ?>
-                        <a href="createbooking.php?hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button">Book</button></a>
+                        <a href="createbooking.php?hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">Book</button></a>
                     <?php } elseif ($_SESSION['userType'] == 'user') { ?>
-                        <a href="createbooking.php?user_id=<?php echo $_SESSION['userId']; ?>&hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button">Book</button></a>
+                        <a href="createbooking.php?hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">Book</button></a>
                     <?php } else { ?>
-                        <a href="register.php"><button type="button">Register or log in to Book</button></a>
+                        <a href="register.php"><button type="button" class="btn btn-primary mt-3 mb-2">Register or log in to Book</button></a>
                     <?php } ?>
                 </div>
             </div>

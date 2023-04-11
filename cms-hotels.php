@@ -11,28 +11,56 @@
     if ($userType!='cms')
         header("Location: index.php");
 
+    if (!isset($_GET["sorting"])) {
+        $hotelSorting = 'id';
+    } else {
+        $hotelSorting = $_GET['sorting'];
+    }
+
     if (isset($_POST['search'])) {
         $searchString = "%" . filter_var($_POST["searchText"], FILTER_SANITIZE_STRING) . "%";
-        $stmt = $pdo->prepare('SELECT * FROM hotel WHERE hotel_name LIKE :ss OR hotel_address LIKE :ss');
-        $stmt->bindValue(':ss', $searchString);
-        $stmt->execute();
+        $hotelQuery = 'SELECT * FROM hotels WHERE hotel_name LIKE :ss OR hotel_address LIKE :ss';
     } else {
-        $stmt = $pdo->prepare('SELECT * FROM hotels');
-        $stmt->execute();
+        $hotelQuery = 'SELECT * FROM hotels';
     }
+
+    if ($hotelSorting == 'id') {
+        $hotelQuery .= ' ORDER BY hotels.hotel_id';
+    } elseif ($hotelSorting == 'hname') {
+        $hotelQuery .= ' ORDER BY hotels.hotel_name';
+    } elseif ($hotelSorting == 'haddr') {
+        $hotelQuery .= ' ORDER BY hotels.hotel_address';
+    } elseif ($hotelSorting == 'hrating') {
+        $hotelQuery .= ' ORDER BY hotels.hotel_rating';
+    }
+
+    if (isset($_POST['search'])) {
+        $stmt = $pdo->prepare($hotelQuery);
+        $stmt->bindValue(':ss', $searchString);
+    } else {
+        $stmt = $pdo->prepare($hotelQuery);
+    }
+    $stmt->execute();
 
     $allHotels = $stmt->fetchAll();
 ?>
 <?php require('./includes/header.html'); ?>
 <div class="container">
     <div class="content">
-        <form method="post" name="searchForm" action="cms-admin.php">
+        <form method="post" name="searchForm" action="cms-hotels.php?sorting=<?php echo $hotelSorting; ?>">
             <input type="text" name="searchText" class="form-control mt-2" />
             <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
         </form>
     </div>
-<div>
 
+    <div>
+        <p>Sorting:
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=id">ID</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=hname">Hotel Name</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=haddr">Hotel Address</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=hrating">Hotel Rating</a>
+        </p>
+    </div>
 <div class="container">
     <div class="content">
         <a href="cms-registerhotel.php"><button name="register" type="button" class="btn btn-primary mt-3 mb-2">Register Hotel</button></a>
@@ -69,5 +97,6 @@ foreach ($allHotels as $hotel_item) {
 }
 ?>
 </table>
+</div>
 
 <?php require('./includes/footer.html'); ?>

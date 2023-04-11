@@ -11,15 +11,45 @@
     if ($userType!='cms')
         header("Location: index.php");
 
+    if (!isset($_GET['sorting'])) {
+        $bookingSorting = 'id';
+    } else {
+        $bookingSorting = $_GET['sorting'];
+    }
+
     if (isset($_POST['search'])) {
         $searchString = "%" . filter_var($_POST["searchText"], FILTER_SANITIZE_STRING) . "%";
-        $stmt = $pdo->prepare('SELECT bookings.booking_id, users.user_email, users.user_title, users.user_firstname, users.user_lastname, bookings.booking_startdate, bookings.booking_enddate, hotels.hotel_name, rooms.room_label, rooms.room_price, bookings.booking_status FROM users INNER JOIN bookings ON users.user_id=bookings.user_id INNER JOIN rooms ON rooms.room_id = bookings.room_id INNER JOIN hotels ON rooms.hotel_id = hotels.hotel_id WHERE users.user_email LIKE :ss OR bookings.booking_id LIKE :ss OR users.user_firstname LIKE :ss OR users.user_lastname LIKE :ss');
-        $stmt->bindValue(':ss', $searchString);
-        $stmt->execute();
+        $bookingQuery = 'SELECT bookings.booking_id, users.user_email, users.user_title, users.user_firstname, users.user_lastname, bookings.booking_startdate, bookings.booking_enddate, hotels.hotel_name, rooms.room_label, rooms.room_price, bookings.booking_status FROM users INNER JOIN bookings ON users.user_id=bookings.user_id INNER JOIN rooms ON rooms.room_id = bookings.room_id INNER JOIN hotels ON rooms.hotel_id = hotels.hotel_id WHERE users.user_email LIKE :ss OR bookings.booking_id LIKE :ss OR users.user_firstname LIKE :ss OR users.user_lastname LIKE :ss OR hotels.hotel_name LIKE :ss or rooms.room_label LIKE :ss';
     } else {
-        $stmt = $pdo->prepare('SELECT bookings.booking_id, users.user_email, users.user_title, users.user_firstname, users.user_lastname, bookings.booking_startdate, bookings.booking_enddate, hotels.hotel_name, rooms.room_label, rooms.room_price, bookings.booking_status FROM users INNER JOIN bookings ON users.user_id=bookings.user_id INNER JOIN rooms ON rooms.room_id = bookings.room_id INNER JOIN hotels ON rooms.hotel_id = hotels.hotel_id');
-        $stmt->execute();
+        $bookingQuery = 'SELECT bookings.booking_id, users.user_email, users.user_title, users.user_firstname, users.user_lastname, bookings.booking_startdate, bookings.booking_enddate, hotels.hotel_name, rooms.room_label, rooms.room_price, bookings.booking_status FROM users INNER JOIN bookings ON users.user_id=bookings.user_id INNER JOIN rooms ON rooms.room_id = bookings.room_id INNER JOIN hotels ON rooms.hotel_id = hotels.hotel_id';
     }
+
+    if ($bookingSorting == 'id') {
+        $bookingQuery .= ' ORDER BY bookings.booking_id';
+    } elseif ($bookingSorting == 'email') {
+        $bookingQuery .= ' ORDER BY users.user_email';
+    } elseif ($bookingSorting == 'fname') {
+        $bookingQuery .= ' ORDER BY users.user_firstname';
+    } elseif ($bookingSorting == 'lname') {
+        $bookingQuery .= ' ORDER BY users.user_lastname';
+    } elseif ($bookingSorting == 'hname') {
+        $bookingQuery .= ' ORDER BY hotels.hotel_name';
+    } elseif ($bookingSorting == 'rlabel') {
+        $bookingQuery .= ' ORDER BY rooms.room_label';
+    } elseif ($bookingSorting == 'sdate') {
+        $bookingQuery .= ' ORDER BY bookings.booking_startdate';
+    } elseif ($bookingSorting == 'edate') {
+        $bookingQuery .= ' ORDER BY bookings.booking_enddate';
+    }
+
+    if (isset($_POST['search'])) {
+        $stmt = $pdo->prepare($bookingQuery);
+        $stmt->bindValue(':ss', $searchString);
+    } else {
+        $stmt = $pdo->prepare($bookingQuery);
+    }
+
+    $stmt->execute();
 
     $allBookings = $stmt->fetchAll();
 ?>
@@ -27,10 +57,22 @@
 <div class="container">
 
     <div class="content">
-        <form method="post" name="searchForm" action="cms-bookings.php">
+        <form method="post" name="searchForm" action="cms-bookings.php?sorting=<?php echo $bookingSorting ?>">
             <input type="text" name="searchText" class="form-control mt-2" />
             <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
         </form>
+    </div>
+    <div>
+        <p>Sorting:
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=id">ID</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=email">Email</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=fname">First Name</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=lname">Last Name</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=hname">Hotel Name</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=rlabel">Room</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=sdate">Start Date</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=edate">End Date</a>
+        </p>
     </div>
     <div>
 

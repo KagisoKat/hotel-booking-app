@@ -11,26 +11,60 @@
     if ($userType!='cms')
     header("Location: index.php");
 
-    if (isset($_POST['search'])) {
-        $searchString = "%" . filter_var($_POST["searchText"], FILTER_SANITIZE_STRING) . "%";
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE users.user_firstname LIKE :ss OR users.user_lastname LIKE :ss OR users.user_email LIKE :ss OR users.user_address LIKE :ss OR users.user_id LIKE :ss');
-        $stmt->bindValue(':ss', $searchString);
-        $stmt->execute();
+    if (!isset($_GET['sorting'])) {
+        $userSorting = 'id';
     } else {
-        $stmt = $pdo->prepare('SELECT * FROM users');
-        $stmt->execute();
+        $userSorting = $_GET['sorting'];
     }
 
+    if (isset($_POST['search'])) {
+        $searchString = "%" . filter_var($_POST["searchText"], FILTER_SANITIZE_STRING) . "%";
+        $userQuery = 'SELECT * FROM users WHERE users.user_firstname LIKE :ss OR users.user_lastname LIKE :ss OR users.user_email LIKE :ss OR users.user_address LIKE :ss OR users.user_id LIKE :ss OR users.user_phone LIKE :ss';
+    } else {
+        $userQuery = 'SELECT * FROM users';
+    }
+
+    if ($userSorting == 'id') {
+        $userQuery .= ' ORDER BY users.user_id';
+    } elseif ($userSorting == 'fname') {
+        $userQuery .= ' ORDER BY users.user_firstname';
+    } elseif ($userSorting == 'lname') {
+        $userQuery .= ' ORDER BY users.user_lastname';
+    } elseif ($userSorting == 'email') {
+        $userQuery .= ' ORDER BY users.user_email';
+    } elseif ($userSorting == 'phone') {
+        $userQuery .= ' ORDER BY users.user_phone';
+    } elseif ($userSorting == 'address') {
+        $userQuery .= ' ORDER BY users.user_address';
+    }
+
+    if (isset($_POST['search'])) {
+        $stmt = $pdo->prepare($userQuery);
+        $stmt->bindValue(':ss', $searchString);
+    } else {
+        $stmt = $pdo->prepare($userQuery);
+    }
+    $stmt->execute();
     $allUsers = $stmt->fetchAll();
 ?>
 <?php require('./includes/header.html'); ?>
 <div class="container">
 
     <div class="content">
-        <form method="post" name="searchForm" action="cms-users.php">
+        <form method="post" name="searchForm" action="cms-users.php?sorting=<?php echo $userSorting ?>">
             <input type="text" name="searchText" class="form-control mt-2" />
             <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
         </form>
+    </div>
+    <div>
+        <p>Sorting:
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=id">ID</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=fname">First Name</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=lname">Last Name</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=email">Email</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=phone">Phone</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=address">Address</a>
+        </p>
     </div>
     <div>
 

@@ -1,6 +1,7 @@
 <?php
     session_start();
     
+    
     require_once('./lib/autoloader.php');
     require('./lib/get-user-details.php');
     require('./config/db.php');

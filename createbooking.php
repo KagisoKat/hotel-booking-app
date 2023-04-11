@@ -35,17 +35,27 @@
     if (isset($_POST['book'])) {
         $booking = new HotelClasses\Booking();
         $booking->setUser(new HotelClasses\User());
-        $booking->getUser()->setId(filter_var($_POST["userName"], FILTER_SANITIZE_STRING));
+        if ($_SESSION['userType'] == "cms") {
+            $booking->getUser()->setId(filter_var($_POST["userName"], FILTER_SANITIZE_STRING));
+        } elseif ($_SESSION['userType'] == "user") {
+            $booking->getUser()->setId($_SESSION['userId']);
+        }
         $booking->setHotel(new HotelClasses\Hotel());
         $booking->getHotel()->setId(filter_var($_POST["hotelName"], FILTER_SANITIZE_STRING));
         $booking->setRoom(new HotelClasses\Room());
         $booking->getRoom()->setId(filter_var($_POST["roomName"], FILTER_SANITIZE_STRING));
         $booking->setStartDate(filter_var($_POST["startDate"], FILTER_SANITIZE_STRING));
         $booking->setEndDate(filter_var($_POST["endDate"], FILTER_SANITIZE_STRING));
+
+        $_SESSION['createBooking'] = serialize($booking);
         
-        $stmt = $pdo->prepare('INSERT INTO bookings(booking_startdate, booking_enddate, user_id, room_id) values (?, ?, ?, ?)');
-        $stmt->execute([$booking->getStartDate(), $booking->getEndDate(), $booking->getUser()->getId(), $booking->getRoom()->getId()]);
-        header("Location: " . $_SERVER['REDIRECT_URI']);
+       if ($_SESSION['userType'] == "cms") {
+            $stmt = $pdo->prepare('INSERT INTO bookings(booking_startdate, booking_enddate, user_id, room_id) values (?, ?, ?, ?)');
+            $stmt->execute([$booking->getStartDate(), $booking->getEndDate(), $booking->getUser()->getId(), $booking->getRoom()->getId()]);
+            header("Location: " . $_SERVER['REDIRECT_URI']);
+        } elseif ($_SESSION['userType'] == "user") {
+            header("Location: confirmbooking.php");
+        }
     }
        
        
@@ -64,29 +74,30 @@
         <div class="card-header bg-light mb-3">Register Hotel</div>
         <div class="card-body">
             <form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="POST">
-                <div class="form-group">
-                    <label for="userName">User Name</label>
-                    <select name="userName">
-                        <?php
-                            $userStmt =  $pdo -> prepare('SELECT user_id, user_title, user_firstname, user_lastname FROM users');
-                            $userStmt->execute();
-                            $users = $userStmt->fetchAll();
+                <?php if ($_SESSION['userType'] == 'cms') { ?>
+                    <div class="form-group">
+                        <label for="userName">User Name</label>
+                        <select name="userName">
+                            <?php
+                                $userStmt =  $pdo -> prepare('SELECT user_id, user_title, user_firstname, user_lastname FROM users');
+                                $userStmt->execute();
+                                $users = $userStmt->fetchAll();
 
-                            foreach($users as $user_item) {
-                                $userOption = new HotelClasses\User();
-                                $userOption->setId($user_item->user_id);
-                                $userOption->setTitle($user_item->user_title);
-                                $userOption->setFirstname($user_item->user_firstname);
-                                $userOption->setLastname($user_item->user_lastname);
+                                foreach($users as $user_item) {
+                                    $userOption = new HotelClasses\User();
+                                    $userOption->setId($user_item->user_id);
+                                    $userOption->setTitle($user_item->user_title);
+                                    $userOption->setFirstname($user_item->user_firstname);
+                                    $userOption->setLastname($user_item->user_lastname);
 
-                                echo '<option value="' . $userOption->getId() . '"';
-                                if ($userOption->getId() == $forUser) echo " selected='selected'";
-                                echo '">' . $userOption->getId() . " - " . $userOption->getTitle() . " " . $userOption->getFirstname() . " " . $userOption->getLastname() . '</option>';
-
-                            }
-                        ?>
-                    </select>
-                </div>
+                                    echo '<option value="' . $userOption->getId() . '"';
+                                    if ($userOption->getId() == $forUser) echo " selected='selected'";
+                                    echo '">' . $userOption->getId() . " - " . $userOption->getTitle() . " " . $userOption->getFirstname() . " " . $userOption->getLastname() . '</option>';
+                                }
+                            ?>
+                        </select>
+                    </div>
+                <?php } ?>
 
                 <div class="form-group">
                     <label for="hotelName">Hotel Name</label>

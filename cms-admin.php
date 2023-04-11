@@ -11,15 +11,36 @@
     if ($userType!='cms')
         header("Location: index.php");
 
+    if (!isset($_GET["sorting"])) {
+        $cmsSorting = "id";
+    } else {
+        $cmsSorting = $_GET['sorting'];
+    }
+
     if (isset($_POST['search'])) {
         $searchString = "%" . filter_var($_POST["searchText"], FILTER_SANITIZE_STRING) . "%";
-        $stmt = $pdo->prepare('SELECT * FROM staff WHERE staff.staff_firstname LIKE :ss OR staff.staff_lastname LIKE :ss OR staff.staff_email LIKE :ss OR staff.staff_id LIKE :ss');
-        $stmt->bindValue(':ss', $searchString);
-        $stmt->execute();
+        $cmsQuery = 'SELECT * FROM staff WHERE staff.staff_firstname LIKE :ss OR staff.staff_lastname LIKE :ss OR staff.staff_email LIKE :ss OR staff.staff_id LIKE :ss';
     } else {
-        $stmt = $pdo->prepare('SELECT * FROM staff');
-        $stmt->execute();
+        $cmsQuery = 'SELECT * FROM staff';
     }
+
+    if ($cmsSorting == 'id') {
+        $cmsQuery .= " ORDER BY staff.staff_id";
+    } elseif ($cmsSorting == 'fname') {
+        $cmsQuery .= " ORDER BY staff.staff_firstname";
+    } elseif ($cmsSorting == 'lname') {
+        $cmsQuery .= " ORDER BY staff.staff_lastname";
+    } elseif ($cmsSorting == 'email') {
+        $cmsQuery .= " ORDER BY staff.staff_email";
+    }
+    
+    if (isset($_POST['search'])) {
+        $stmt = $pdo->prepare($cmsQuery);
+        $stmt->bindValue(':ss', $searchString);
+    } else {
+        $stmt = $pdo->prepare($cmsQuery);
+    }
+    $stmt->execute();
 
     $allStaff = $stmt->fetchAll();
 ?>
@@ -31,6 +52,17 @@
             <input type="text" name="searchText" class="form-control mt-2" />
             <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
         </form>
+    </div>
+    <div>
+        <a href="cms-register-cms.php"><button name="registercms" type="button" class="btn btn-primary mt-3 mb-3">Register Staff</button></a>
+    </div>
+    <div>
+        <p>Sorting:
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=id">ID</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=fname">First Name</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=lname">Last Name</a>
+            <a href="<?php $_SERVER['PHP_SELF']; ?>?sorting=email">Email</a>
+        </p>
     </div>
     <div>
 

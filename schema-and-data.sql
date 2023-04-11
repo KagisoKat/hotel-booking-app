@@ -26,6 +26,8 @@ CREATE TABLE `bookings` (
   `booking_id` int(11) NOT NULL AUTO_INCREMENT,
   `booking_startdate` date NOT NULL,
   `booking_enddate` date NOT NULL,
+  `booking_status` enum('active','cancelled') NOT NULL DEFAULT 'active',
+  `booking_uuid` text NOT NULL,
   `user_id` int(11) NOT NULL,
   `room_id` int(11) NOT NULL,
   PRIMARY KEY (`booking_id`),
@@ -33,7 +35,7 @@ CREATE TABLE `bookings` (
   KEY `fk_booking_room_id` (`room_id`),
   CONSTRAINT `fk_booking_room_id` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_booking_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +44,7 @@ CREATE TABLE `bookings` (
 
 LOCK TABLES `bookings` WRITE;
 /*!40000 ALTER TABLE `bookings` DISABLE KEYS */;
-INSERT INTO `bookings` VALUES (1,'2023-03-15','2023-03-22',1,5),(2,'2023-03-12','2023-03-19',2,5);
+INSERT INTO `bookings` VALUES (1,'2023-03-15','2023-03-22','active','ba4912f0-e045-46c7-b73e-fb844f7185a2',1,5),(2,'2023-03-12','2023-03-19','active','f6d2992a-9094-4695-b303-341ff6c3adb0',2,5),(3,'2023-03-20','2023-03-23','active','f1c4e9a3-a261-478a-b28a-9da9aa0fecd1',1,1),(8,'2023-03-23','2023-03-31','active','31ed7a16-8d13-4fea-8915-202ca11f1b8c',2,4),(9,'2023-03-01','2023-03-05','active','195cb26d-1477-4f0d-bc59-33382a1dc94e',2,6),(10,'2023-03-01','2023-03-05','active','c15f6341-912a-4dcf-8b71-6cada814dbc8',2,2),(11,'2023-03-08','2023-03-16','active','7a3ac2bf-1877-4e25-bce4-341006e2afab',1,5),(12,'2023-03-07','2023-03-17','active','abb0df1d-0ef2-476f-beb7-3daf6d8994a8',1,6),(13,'2023-04-09','2023-04-10','active','0ff5b690-886a-4684-93b7-0bd516b7caaa',1,5),(14,'2023-04-25','2023-04-29','active','70e7087c-023f-4e69-a55a-ca33dafcb2d0',1,2),(15,'2023-04-25','2023-04-29','active','2786d4d6-3bef-4025-9ea3-2b33813d2a9a',1,2),(16,'2023-04-25','2023-04-29','active','059b7da9-2f59-41a6-997a-5882c935c41e',1,2),(17,'2023-04-25','2023-04-29','active','8e709d57-635b-470b-8cbc-19125e460408',1,2),(18,'2023-04-19','2023-04-20','active','f94ca064-c6e6-4ea8-a920-11719e381486',1,1);
 /*!40000 ALTER TABLE `bookings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -197,6 +199,7 @@ CREATE TABLE `users` (
   `user_firstname` varchar(50) NOT NULL,
   `user_lastname` varchar(50) NOT NULL,
   `user_email` varchar(50) NOT NULL,
+  `user_phone` varchar(20) NOT NULL,
   `user_address` varchar(255) NOT NULL,
   `user_password` varchar(100) NOT NULL,
   PRIMARY KEY (`user_id`),
@@ -211,7 +214,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Mr.','Ozzy','Hairndy','ozzy@bathead.com','99 Sleepy Road, Napville, 2345','$2y$10$8GJc7nP.k8.46kk8g.yo9.Ub.G4Lju6b2TSb3c07ZTvXJmWSjqzVm'),(2,'Ms.','Stevie','Lynn','stevie@treaties.com','99 Treat Street, Nomville, 1234','$2y$10$jlS48SupA6f7zGtutwlvduFKl1fiuQBtagR2DaD/B9HVcxTjagVj2');
+INSERT INTO `users` VALUES (1,'Mr.','Ozzy','Hairndy','ozzy@bathead.com','+27721236547','99 Sleepy Road, Napville, 2345','$2y$10$8GJc7nP.k8.46kk8g.yo9.Ub.G4Lju6b2TSb3c07ZTvXJmWSjqzVm'),(2,'Ms.','Stevie','Lynn','stevie@treaties.com','+27769871234','99 Treat Street, Nomville, 1234','$2y$10$jlS48SupA6f7zGtutwlvduFKl1fiuQBtagR2DaD/B9HVcxTjagVj2');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -224,4 +227,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-10 21:49:07
+-- Dump completed on 2023-04-11 12:47:59

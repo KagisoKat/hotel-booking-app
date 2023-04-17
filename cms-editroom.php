@@ -46,15 +46,16 @@
         
         $stmt = $pdo->prepare('UPDATE rooms SET room_label = ?, room_price = ? WHERE room_id = ?');
         $stmt->execute([$room->getLabel(), $room->getPrice(), $room->getId()]);
-        header('Location: cms-editroom.php?room_id=' . $room.getid() . '&hotel_id=' . $room->getHotelId());
+        header('Location: cms-editroom.php?room_id=' . $room->getid() . '&hotel_id=' . $room->getHotelId());
     }
 
     if (isset($_FILES['roomPictureUpload'])) {
         $errors= array();
+        $uploadFilename = $_FILES['roomPictureUpload']['name'];
         $file_size = $_FILES['roomPictureUpload']['size'];
         $file_tmp = $_FILES['roomPictureUpload']['tmp_name'];
         $file_type = $_FILES['roomPictureUpload']['type'];
-        $file_ext = strtolower(end(explode('.',$_FILES['roomPictureUpload']['name'])));
+        $file_ext = strtolower(end(explode('.', $uploadFilename)));
         $file_name = genuuid() . "." . $file_ext;
       
         $extensions= array("jpeg","jpg","png");
@@ -111,7 +112,7 @@
                                 echo '<td>' . $picture->getId() . '</td>';
                                 echo '<td>' . $picture->getFilename() . '</td>';
                                 echo '<td><img style="object-fit:contain;width:100%;height:20em;" src="./hotel-images/' . $picture->getFilename() .'" /></td>';
-                                echo '<td><a href="cms-deleteroompicture.php?picture_id=' . $picture->getId() . '&room_id='. $editRoom->getId() .'&hotel_id=' . $editRoom->getHotelId . '">Delete</a></td>';
+                                echo '<td><a href="cms-deleteroompicture.php?picture_id=' . $picture->getId() . '&room_id='. $editRoom->getId() .'&hotel_id=' . $editRoom->getHotelId() . '">Delete</a></td>';
                                 echo '</tr>';
                             }
                         ?>

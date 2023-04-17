@@ -35,12 +35,12 @@
         $booking->getRoom()->setPrice($booking_item->room_price);
         
         $filename = 'receipts/' . genuuid() . ".txt";
-        $receipt = fopen($filename, "w");
+        $receipt = fopen($filename, "w") or die('Cannot open file for writing: "$filename". Check access permissions');
         
         fwrite($receipt, "Booking Receipt\n");
         fwrite($receipt, "---------------\n");
         fwrite($receipt, "Booking ID: " . $booking->getId() . "\n");
-        fwrite($receipt, "Name: " . $booking->getUser()->getTitle . " " . $booking->getUser()->getFirstName() . " " . $booking->getUser()->getLastName() . "\n");
+        fwrite($receipt, "Name: " . $booking->getUser()->getTitle() . " " . $booking->getUser()->getFirstName() . " " . $booking->getUser()->getLastName() . "\n");
         fwrite($receipt, "Email: " . $booking->getUser()->getEmail() . "\n");
         fwrite($receipt, "Phone: " . $booking->getUser()->getPhone() . "\n");
         fwrite($receipt, "Hotel: " . $booking->getHotel()->getName() . "\n");

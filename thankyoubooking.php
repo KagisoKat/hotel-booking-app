@@ -1,4 +1,16 @@
-<?php require('./includes/header.html'); ?>
+<?php
+    session_start();
+    require_once('./lib/autoloader.php');
+    require('./lib/get-user-details.php');
+    require('./includes/header.html');
+
+    if (isset($_SESSION['userType'])) $userType=$_SESSION['userType'];
+    else $userType='guest';
+    if ($userType == 'guest')
+        header('Location: index.html');
+
+    require_once('./config/db.php');    
+?>
 <div class="container">
     <div class= "card bg-light mb-3">
         <div class="card-header">

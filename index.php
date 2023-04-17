@@ -3,9 +3,10 @@
     require_once('./lib/autoloader.php');
     require('./lib/get-user-details.php');
     if (isset($_SESSION['userType'])) $userType=$_SESSION['userType'];
-    else $userType='guest';
+    else $_SESSION['userType']='guest';
     require('./includes/header.html');
     require_once('./config/db.php');
+
     if (isset($_POST['search'])) {
         $searchString = "%" . filter_var($_POST["searchText"], FILTER_SANITIZE_STRING) . "%";
         $stmt = $pdo->prepare('SELECT * FROM hotels WHERE hotels.hotel_name LIKE :ss');

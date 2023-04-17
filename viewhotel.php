@@ -166,13 +166,13 @@
                     <p class="card-text"><?php echo $roomCard->getPrice() ?></p>
                 </div>
                 <div class="card-footer">
-                    <a href="viewhotel.php?hotel_id=<?php echo $thisHotel->getId() ?>&room_id=<?php echo $roomCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">View Room</button></a>
+                    <!-- <a href="viewhotel.php?hotel_id=<?php //echo $thisHotel->getId() ?>&room_id=<?php //echo $roomCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">View Room</button></a> -->
                     <?php if ($_SESSION['userType'] == 'cms') { ?>
                         <a href="createbooking.php?hotel_id=<?php echo $thisHotel->getId() ?>&room_id=<?php echo $roomCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">Book</button></a>
                     <?php } elseif ($_SESSION['userType'] == 'user') { ?>
                         <a href="createbooking.php?hotel_id=<?php echo $thisHotel->getId() ?>&room_id=<?php echo $roomCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">Book</button></a>
                     <?php } else { ?>
-                        <a href="register.php"><button type="button">Register or log in to Book</button></a>
+                        <a href="register.php"><button type="button" class="btn btn-primary mt-3 mb-2">Register or log in to Book</button></a>
                     <?php } ?>
                 </div>
             </div>

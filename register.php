@@ -9,7 +9,7 @@
         $user->setFirstName($_POST["userFirstName"], FILTER_SANITIZE_STRING);
         $user->setLastName($_POST["userLastName"], FILTER_SANITIZE_STRING);
         $user->setEmail($_POST["userEmail"], FILTER_SANITIZE_EMAIL);
-        $user->setAddress($_POST["userAddress"], FILTER_SANITIZE_EMAIL);
+        $user->setAddress($_POST["userAddress"], FILTER_SANITIZE_STRING);
         $user->setPassword($_POST["userPassword"], FILTER_SANITIZE_STRING);
         $user->hashPassword();
    

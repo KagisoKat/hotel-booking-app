@@ -8,11 +8,11 @@
 }
 
 body{
-    background-color: rgb(211, 235, 92);
+    background-color: #db9d46;
 }
 
 nav {
-    background-color: green;
+    background-color: #816DD6;
     padding: 15px 25px;
     display: flex;
     justify-content: space-between;

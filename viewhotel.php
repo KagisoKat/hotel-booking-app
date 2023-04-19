@@ -55,12 +55,12 @@
 <div class="content">
     <form method="post" name="searchForm" action="viewhotel.php?hotel_id=<?php echo $hotelId ?>">
         <input type="text" name="searchText" class="form-control mt-2" />
-        <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
+        <button name="search" type="submit" class="btn btn-dark mt-3 mb-2">Search</button>
     </form>
 </div>
 
-<div class="container">
-    <div class= "card bg-light mb-3">
+<div class="container ">
+    <div class= "card  mb-3">
         <div class="card-header">
             <h5><?php echo $thisHotel->getName() ?></h5>
         </div>
@@ -130,11 +130,11 @@
             //var_dump($hotelCard);
             //echo "</pre>";
     ?>
-        <div class="col">
-            <div class="card mx-2 my-2">
+        <div class="col bg-light " >
+            <div class="card mx-2 my-2 ">
                 
-                <div id="hotelControls" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner"> <!-- <div class="carousel-inner card-image-top"> -->
+                <div id="hotelControls" >
+                    <div> <!-- <div class="carousel-inner card-image-top"> -->
                         <?php $numPictures = 0 ?>
                         <?php
                             if (sizeOf($roomCard->getPictureArray()) > 0 ) {
@@ -151,28 +151,21 @@
                             }
                         ?>
                     </div>
-                    <a class="carousel-control-prev" href="#hotelControls" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#hotelControls" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
+                    
                  </div>
 
-                <div class="card-body">
+                <div class="card-body ">
                     <h5 class="card-title"><?php echo $roomCard->getLabel() ?></h5>
                     <p class="card-text"><?php echo $roomCard->getPrice() ?></p>
                 </div>
                 <div class="card-footer">
                     <!-- <a href="viewhotel.php?hotel_id=<?php //echo $thisHotel->getId() ?>&room_id=<?php //echo $roomCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">View Room</button></a> -->
                     <?php if ($_SESSION['userType'] == 'cms') { ?>
-                        <a href="createbooking.php?hotel_id=<?php echo $thisHotel->getId() ?>&room_id=<?php echo $roomCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">Book</button></a>
+                        <a href="createbooking.php?hotel_id=<?php echo $thisHotel->getId() ?>&room_id=<?php echo $roomCard->getId() ?>"><button type="button" class="btn btn-dark mt-3 mb-2">Book</button></a>
                     <?php } elseif ($_SESSION['userType'] == 'user') { ?>
-                        <a href="createbooking.php?hotel_id=<?php echo $thisHotel->getId() ?>&room_id=<?php echo $roomCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">Book</button></a>
+                        <a href="createbooking.php?hotel_id=<?php echo $thisHotel->getId() ?>&room_id=<?php echo $roomCard->getId() ?>"><button type="button" class="btn btn-dark mt-3 mb-2">Book</button></a>
                     <?php } else { ?>
-                        <a href="register.php"><button type="button" class="btn btn-primary mt-3 mb-2">Register or log in to Book</button></a>
+                        <a href="register.php"><button type="button" class="btn btn-dark mt-3 mb-2">Register or log in to Book</button></a>
                     <?php } ?>
                 </div>
             </div>

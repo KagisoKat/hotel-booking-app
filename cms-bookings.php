@@ -59,7 +59,7 @@
     <div class="content">
         <form method="post" name="searchForm" action="cms-bookings.php?sorting=<?php echo $bookingSorting ?>">
             <input type="text" name="searchText" class="form-control mt-2" />
-            <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
+            <button name="search" type="submit" class="btn btn-dark mt-3 mb-2">Search</button>
         </form>
     </div>
     <div>

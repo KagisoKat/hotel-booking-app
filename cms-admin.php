@@ -50,11 +50,11 @@
     <div class="content">
         <form method="post" name="searchForm" action="cms-admin.php">
             <input type="text" name="searchText" class="form-control mt-2" />
-            <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
+            <button name="search" type="submit" class="btn btn-dark mt-3 mb-2">Search</button>
         </form>
     </div>
     <div>
-        <a href="cms-register-cms.php"><button name="registercms" type="button" class="btn btn-primary mt-3 mb-3">Register Staff</button></a>
+        <a href="cms-register-cms.php"><button name="registercms" type="button" class="btn btn-dark mt-3 mb-3">Register Staff</button></a>
     </div>
     <div>
         <p>Sorting:

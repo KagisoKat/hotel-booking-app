@@ -53,9 +53,9 @@ require('./includes/header.html'); ?>
                     <label for="staffPassword">Password</label>
                     <input required type="password" name="staffPassword" class="form-control" />
                 </div>
-                <button name="login" type="submit" class="btn btn-primary mt-2">Login</button>
-                <a href="register-cms.php"><button name="register" type="button" class="btn btn-primary mt-2">Register</button></a>
-                <a href="forgot-cms.php"><button name="forgot" type="button" class="btn btn-primary mt-2">Forgot Password</button></a>
+                <button name="login" type="submit" class="btn btn-secondary mt-2">Login</button>
+                <a href="register-cms.php"><button name="register" type="button" class="btn btn-secondary mt-2">Register</button></a>
+                <a href="forgot-cms.php"><button name="forgot" type="button" class="btn btn-secondary mt-2">Forgot Password</button></a>
             </form>
         </div>
     </div>

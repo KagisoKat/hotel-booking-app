@@ -71,13 +71,13 @@
 <?php require('./includes/header.html'); ?>
 
 <div class="container">
-    <div class="card">
+    <div class="card bg-light">
         <div class="card-header bg-light mb-3">Register Hotel</div>
         <div class="card-body">
             <form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="POST">
                 <?php if ($_SESSION['userType'] == 'cms') { ?>
                     <div class="form-group">
-                        <label for="userName">User Name</label>
+                        <label for="userName" class="mb-3">User Name</label>
                         <select name="userName">
                             <?php
                                 $userStmt =  $pdo -> prepare('SELECT user_id, user_title, user_firstname, user_lastname FROM users');
@@ -101,7 +101,7 @@
                 <?php } ?>
 
                 <div class="form-group">
-                    <label for="hotelName">Hotel Name</label>
+                    <label for="hotelName" class="mb-3">Hotel Name</label>
                     <select name="hotelName" onChange="doReload(<?php echo $forUser ?>, this.value);">
                         <?php
                             $hotelStmt =  $pdo -> prepare('SELECT hotel_id, hotel_name FROM hotels');
@@ -123,7 +123,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="roomName">Room Name/Number</label>
+                    <label for="roomName" class="mb-3">Room Name/Number</label>
                     <select name="roomName">
                         <?php
                             $roomStmt =  $pdo -> prepare('SELECT room_id, room_label FROM rooms WHERE hotel_id = ?');
@@ -145,17 +145,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="startdate">Start Date</label>
+                    <label for="startdate" class="mb-3">Start Date</label>
                     <input required type="date" name="startDate" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label for="endDate">End Date</label>
+                    <label for="endDate" class="mb-3 mt-3">End Date</label>
                     <input required type="date" name="endDate" class="form-control" />
                 </div>
                 <br />
                 <div class="form-group">
-                    <button name="book" type="submit" class="btn btn-primary">Book</button>
-                    <button name="back" type="button" class="btn btn-primary" onclick="history.go(-1);">Back</button>
+                    <button name="book" type="submit" class="btn btn-dark">Book</button>
+                    <button name="back" type="button" class="btn btn-dark" onclick="history.go(-1);">Back</button>
                 </div>
             </form>
         </div>

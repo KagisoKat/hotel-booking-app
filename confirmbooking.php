@@ -236,7 +236,8 @@
         </div>
         <div class="card-footer">
             <form method="POST" name="confirmForm" action="confirmbooking.php">
-                <button type="submit" name="confirm" class="btn btn-primary mt-3 mb-2">Confirm</button><a href="<?php echo $_SERVER['HTTP_REFERER'] ?>"><button type="button" name="back" class="btn btn-primary mt-3 mb-2">Back</button></a>
+                <button type="submit" name="confirm" class="btn btn-dark mt-3 mb-2">Confirm</button><a href="<?php echo $_SERVER['HTTP_REFERER'] ?>">
+                <button type="button" name="back" class="btn btn-dark mt-3 mb-2 mx-auto ">Back</button></a>
             </form>
         </div>
     </div>

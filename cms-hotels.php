@@ -49,7 +49,7 @@
     <div class="content">
         <form method="post" name="searchForm" action="cms-hotels.php?sorting=<?php echo $hotelSorting; ?>">
             <input type="text" name="searchText" class="form-control mt-2" />
-            <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
+            <button name="search" type="submit" class="btn btn-dark mt-3 mb-2">Search</button>
         </form>
     </div>
 
@@ -63,7 +63,7 @@
     </div>
 <div class="container">
     <div class="content">
-        <a href="cms-registerhotel.php"><button name="register" type="button" class="btn btn-primary mt-3 mb-2">Register Hotel</button></a>
+        <a href="cms-registerhotel.php"><button name="register" type="button" class="btn btn-dark mt-3 mb-2">Register Hotel</button></a>
     </div>
 <div>
 
@@ -72,7 +72,7 @@
         <th>ID</th>
         <th>Hotel Name</th>
         <th>Hotel Address</th>
-        <th>Hotel Rating</th>
+        <th>Hotel Star Rating</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>

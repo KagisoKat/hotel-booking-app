@@ -62,8 +62,8 @@
                     <input required type="password" name="staffPassword" class="form-control" />
                 </div>
                 <br />
-                <button name="register" type="submit" class="btn btn-primary">Register</button>
-                <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>"><button name="register" type="button" class="btn btn-primary">Back</button>
+                <button name="register" type="submit" class="btn btn-dark">Register</button>
+                <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>"><button name="register" type="button" class="btn btn-dark">Back</button>
             </form>
         </div>
     </div>

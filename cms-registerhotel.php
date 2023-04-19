@@ -41,7 +41,7 @@
                 </div>
                 <br />
                 <div class="form-group">
-                    <button name="register" type="submit" class="btn btn-primary">Register Hotel</button>
+                    <button name="register" type="submit" class="btn btn-dark">Register Hotel</button>
                 </div>
             </form>
         </div>

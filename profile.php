@@ -67,15 +67,15 @@
                     </div>
                 <?php } ?>
                 <div class="form-group">
-                    <label for="userFirstName">First Name</label>
+                    <label for="userFirstName" class="mb-3">First Name:</label>
                     <input required type="text" name="userFirstName" class="form-control" value="<?php if ($userType == "user") echo $user->getFirstName(); elseif ($userType == "cms") echo $staff->getFirstName(); ?>" />
                 </div>
                 <div class="form-group">
-                    <label for="userLastName">Last Name</label>
+                    <label for="userLastName" class="mb-3">Last Name:</label>
                     <input required type="text" name="userLastName" class="form-control" value="<?php if ($userType == "user") echo $user->getLastName(); elseif ($userType == "cms") echo $staff->getLastName(); ?>" />
                 </div>
                 <div class="form-group">
-                    <label for="userEmail">User Email</label>
+                    <label for="userEmail" class="mb-3 mt-3">User Email:</label>
                     <input required type="email" name="userEmail" class="form-control" value="<?php if ($userType == "user") echo $user->getEmail(); elseif ($userType == "cms") echo $staff->getEmail(); ?>" />
                     <?php if (isset($emailTaken)) { ?>
                         <p><?php echo $emailTaken ?>
@@ -90,7 +90,7 @@
                 </div> <?php } ?>
                 <br />
                 <div class="form-group">
-                    <button name="update" type="submit" class="btn btn-primary">Update the details</button>
+                    <button name="update" type="submit" class="btn btn-dark">Update the details</button>
                 </div>
             </form>
         </div>

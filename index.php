@@ -20,10 +20,10 @@
     $allHotels = $stmt->fetchAll();
 ?>
 
-<div class="content">
+<div class="content" >
     <form method="post" name="searchForm" action="index.php">
         <input type="text" name="searchText" class="form-control mt-2" />
-        <button name="search" type="submit" class="btn btn-primary mt-3 mb-2">Search</button>
+        <button name="search" type="submit" class="btn btn-dark mt-3 mb-2">Search</button>
     </form>
 </div>
 <div class="row row-cols-md-4">
@@ -110,13 +110,13 @@
                     <p class="card-text"><?php echo $hotelCard->getAddress() ?></p>
                 </div>
                 <div class="card-footer">
-                    <a href="viewhotel.php?hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">View Hotel</button></a>
+                    <a href="viewhotel.php?hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button" class="btn btn-dark mt-3 mb-2">View Hotel</button></a>
                     <?php if ($_SESSION['userType'] == 'cms') { ?>
-                        <a href="createbooking.php?hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">Book</button></a>
+                        <a href="createbooking.php?hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button" class="btn btn-dark mt-3 mb-2">Book</button></a>
                     <?php } elseif ($_SESSION['userType'] == 'user') { ?>
-                        <a href="createbooking.php?hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button" class="btn btn-primary mt-3 mb-2">Book</button></a>
+                        <a href="createbooking.php?hotel_id=<?php echo $hotelCard->getId() ?>"><button type="button" class="btn btn-dark mt-3 mb-2">Book</button></a>
                     <?php } else { ?>
-                        <a href="register.php"><button type="button" class="btn btn-primary mt-3 mb-2">Register or log in to Book</button></a>
+                        <a href="register.php"><button type="button" class="btn btn-dark mt-3 mb-2">Register or log in to Book</button></a>
                     <?php } ?>
                 </div>
             </div>
@@ -124,4 +124,5 @@
     <?php } ?>
 
 </div>
+
 <?php require('./includes/footer.html'); ?>

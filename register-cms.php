@@ -61,7 +61,7 @@
                     <input required type="password" name="staffPassword" class="form-control" />
                 </div>
                 <br />
-                <button name="register" type="submit" class="btn btn-primary">Register</button>
+                <button name="register" type="submit" class="btn btn-dark">Register</button>
             </form>
         </div>
     </div>
